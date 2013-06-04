@@ -1,0 +1,31 @@
+extensions: designer.cs generated.cs
+extensions: .cs .cpp .h
+// ---------------------------------------------------------------------------
+// <copyright file="%FileName%" company="Walletex Microelectronics LTD">
+//     Copyright (c) Walletex Microelectronics LTD, Israel 2011. All rights reserved.
+//     Author: %UserName%
+//     Date: %CurrentDay%-%CurrentMonth%-%CurrentYear%
+// </copyright>
+// -----------------------------------------------------------------------------
+extensions: .aspx .ascx
+<%-- 
+// ---------------------------------------------------------------------------
+// <copyright file="%FileName%" company="Walletex Microelectronics LTD">
+//     Copyright (c) Walletex Microelectronics LTD, Israel 2011. All rights reserved.
+//     Author: %UserName%
+//     Date: %CurrentDay%-%CurrentMonth%-%CurrentYear%
+// </copyright>
+// -----------------------------------------------------------------------------
+--%>
+extensions: .vb
+'Sample license text.
+extensions:  .xml .config .xsd
+<!--
+// ---------------------------------------------------------------------------
+// <copyright file="%FileName%" company="Walletex Microelectronics LTD">
+//     Copyright (c) Walletex Microelectronics LTD, Israel 2011. All rights reserved.
+//     Author: %UserName%
+//     Date: %CurrentDay%-%CurrentMonth%-%CurrentYear%
+// </copyright>
+// -----------------------------------------------------------------------------
+-->

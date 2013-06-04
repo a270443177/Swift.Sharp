@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwiftSharp", "SwiftSharp.csproj", "{3A0C571E-5F56-4546-B9FD-57C20E715D57}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MahApps.Metro.NET45", "..\..\Common\MahApps.Metro\MahApps.Metro\MahApps.Metro.NET45.csproj", "{942D11C4-29F5-46C4-8C14-4B976D56C637}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwiftSharp.Core", "SwiftSharp.Core\SwiftSharp.Core.csproj", "{3C48F783-E1C2-4CC0-B3E6-2DB803C8D300}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwiftSharp.Core.XUnit", "SwiftSharp.Core.XUnit\SwiftSharp.Core.XUnit.csproj", "{651F15E1-04A5-451C-BFC0-F0092596CCDD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Keystone.Core", "Keystone.Core\Keystone.Core.csproj", "{9F57450A-01DB-49F7-B0C2-4A28702CC7BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Keystone.Core.Xunit", "Keystone.Core.Xunit\Keystone.Core.Xunit.csproj", "{B4FACDD8-D526-460D-A7C5-C06356E3D159}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3A0C571E-5F56-4546-B9FD-57C20E715D57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A0C571E-5F56-4546-B9FD-57C20E715D57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A0C571E-5F56-4546-B9FD-57C20E715D57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A0C571E-5F56-4546-B9FD-57C20E715D57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{942D11C4-29F5-46C4-8C14-4B976D56C637}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{942D11C4-29F5-46C4-8C14-4B976D56C637}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{942D11C4-29F5-46C4-8C14-4B976D56C637}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{942D11C4-29F5-46C4-8C14-4B976D56C637}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C48F783-E1C2-4CC0-B3E6-2DB803C8D300}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C48F783-E1C2-4CC0-B3E6-2DB803C8D300}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C48F783-E1C2-4CC0-B3E6-2DB803C8D300}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C48F783-E1C2-4CC0-B3E6-2DB803C8D300}.Release|Any CPU.Build.0 = Release|Any CPU
+		{651F15E1-04A5-451C-BFC0-F0092596CCDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{651F15E1-04A5-451C-BFC0-F0092596CCDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{651F15E1-04A5-451C-BFC0-F0092596CCDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{651F15E1-04A5-451C-BFC0-F0092596CCDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F57450A-01DB-49F7-B0C2-4A28702CC7BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F57450A-01DB-49F7-B0C2-4A28702CC7BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F57450A-01DB-49F7-B0C2-4A28702CC7BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F57450A-01DB-49F7-B0C2-4A28702CC7BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4FACDD8-D526-460D-A7C5-C06356E3D159}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4FACDD8-D526-460D-A7C5-C06356E3D159}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4FACDD8-D526-460D-A7C5-C06356E3D159}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4FACDD8-D526-460D-A7C5-C06356E3D159}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

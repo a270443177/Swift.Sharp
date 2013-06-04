@@ -21,8 +21,8 @@ namespace Keystone.Core
         /// <value>
         /// The username.
         /// </value>
-        [DataMember]
-        public string username { get; set; }
+        [DataMember(Name="username")]
+        public string Username { get; set; }
 
         /// <summary>
         /// Gets or sets the password.
@@ -30,7 +30,7 @@ namespace Keystone.Core
         /// <value>
         /// The password.
         /// </value>
-        [DataMember]
-        public string password { get; set; }
+        [DataMember(Name="password")]
+        public string Password { get; set; }
     }
 }

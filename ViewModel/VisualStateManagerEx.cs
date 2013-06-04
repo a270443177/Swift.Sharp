@@ -23,7 +23,14 @@ namespace SwiftSharp.Gui.ViewModel
         /// <returns></returns>
         public static string GetVisualState(DependencyObject obj)
         {
-            return (string)obj.GetValue(VisualStateProperty);
+            if (obj != null)
+            {
+                return (string)obj.GetValue(VisualStateProperty);
+            }
+            else
+            {
+                return string.Empty;
+            }
         }
 
         /// <summary>
@@ -33,7 +40,14 @@ namespace SwiftSharp.Gui.ViewModel
         /// <param name="value">The value.</param>
         public static void SetVisualState(DependencyObject obj, string value)
         {
-            obj.SetValue(VisualStateProperty, value);
+            if (obj != null)
+            {
+                obj.SetValue(VisualStateProperty, value);
+            }
+            else
+            {
+                throw new ArgumentNullException("obj");
+            }
         }
 
         /// <summary>

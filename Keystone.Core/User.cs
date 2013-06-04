@@ -23,7 +23,7 @@ namespace Keystone.Core
         /// The username.
         /// </value>
         [DataMember(Name = "username")]
-        public string Username
+        public string UserName
         {
             get;
             set;
@@ -35,6 +35,7 @@ namespace Keystone.Core
         /// <value>
         /// The roles links.
         /// </value>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification = "Serialization property")] 
         [DataMember(Name = "roles_links")]
         public string[] RolesLinks
         {
@@ -74,6 +75,7 @@ namespace Keystone.Core
         /// <value>
         /// The roles.
         /// </value>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification = "Serialization property")] 
         [DataMember(Name = "roles")]
         public Role[] Roles
         {

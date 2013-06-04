@@ -21,7 +21,7 @@ namespace Keystone.Core
         /// <value>
         /// The name.
         /// </value>
-        [DataMember(Name="name")]
+        [DataMember(Name = "name")]
         public string Name
         {
             get;

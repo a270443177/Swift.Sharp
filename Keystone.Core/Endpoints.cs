@@ -21,8 +21,9 @@ namespace Keystone.Core
         /// <value>
         /// The endpoints.
         /// </value>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification = "Serialization property")] 
         [DataMember(Name = "endpoints")]
-        public Endpoint[] EndpointsColl
+        public Endpoint[] EndpointsCollection
         {
             get;
             set;
@@ -34,6 +35,7 @@ namespace Keystone.Core
         /// <value>
         /// The endpoint links.
         /// </value>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification = "Serialization property")] 
         [DataMember(Name = "endpoints_links")]
         public string[] EndpointLinks
         {
@@ -47,6 +49,7 @@ namespace Keystone.Core
         /// <value>
         /// The type.
         /// </value>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods", Justification = "Serialization property")] 
         [DataMember(Name = "type")]
         public string Type
         {

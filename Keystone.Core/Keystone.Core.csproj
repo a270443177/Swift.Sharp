@@ -51,7 +51,8 @@
     <Compile Include="Credentials.cs" />
     <Compile Include="Endpoint.cs" />
     <Compile Include="Endpoints.cs" />
-    <Compile Include="Keystone.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="KeystoneClient.cs" />
     <Compile Include="KeystoneRequest.cs" />
     <Compile Include="KeystoneResponse.cs" />
     <Compile Include="Metadata.cs" />

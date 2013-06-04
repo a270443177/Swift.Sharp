@@ -17,7 +17,7 @@ namespace Keystone.Core.Xunit
 {
     public class Keystone_XUnit
     {
-        private Keystone keystone;
+        private KeystoneClient keystone;
 
         private static Uri localhost = new Uri("http://localhost");
         private static Uri wrongHost = new Uri("http://10.0.0.197");
@@ -32,7 +32,7 @@ namespace Keystone.Core.Xunit
         /// </summary>
         public Keystone_XUnit()
         {
-            keystone = new Keystone();
+            keystone = new KeystoneClient();
 
             // Allow xUnit to trace/debug output to 'Output' window
             System.Diagnostics.Debug.Listeners.Add(new System.Diagnostics.DefaultTraceListener());

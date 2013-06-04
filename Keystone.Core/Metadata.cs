@@ -14,7 +14,7 @@ namespace Keystone.Core
     /// 'Metadata' entity in <see cref="KeystoneResponse"/>
     /// </summary>
     [DataContract]
-    public class Metadata
+    public class UserMetadata
     {
         /// <summary>
         /// Gets or sets a value indicating whether this instance is admin.
@@ -35,6 +35,7 @@ namespace Keystone.Core
         /// <value>
         /// The roles.
         /// </value>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification = "Serialization property")]
         [DataMember(Name = "roles")]
         public string[] Roles
         {

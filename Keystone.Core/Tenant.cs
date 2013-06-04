@@ -10,7 +10,7 @@ namespace Keystone.Core
     using System.Runtime.Serialization;
 
     /// <summary>
-    /// 'Tenant' entity for <see cref="KToken"/> object
+    /// 'Tenant' entity for <see cref="Token"/> object
     /// </summary>
     [DataContract]
     public class Tenant

@@ -21,6 +21,7 @@ namespace Keystone.Core
         /// <value>
         /// The admin URL.
         /// </value>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings", Justification = "Serialization property")]
         [DataMember(Name = "adminURL")]
         public string AdminUrl
         {
@@ -47,6 +48,7 @@ namespace Keystone.Core
         /// <value>
         /// The internal URL.
         /// </value>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings", Justification = "Serialization property")] 
         [DataMember(Name = "internalURL")]
         public string InternalUrl
         {
@@ -73,6 +75,7 @@ namespace Keystone.Core
         /// <value>
         /// The public URL.
         /// </value>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings", Justification = "Serialization property")] 
         [DataMember(Name = "publicURL")]
         public string PublicUrl
         {

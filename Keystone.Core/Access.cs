@@ -35,6 +35,7 @@ namespace Keystone.Core
         /// <value>
         /// The service catalog.
         /// </value>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification = "Serialization property")] 
         [DataMember(Name = "serviceCatalog")]
         public Endpoints[] ServiceCatalog
         {
@@ -42,6 +43,12 @@ namespace Keystone.Core
             set;
         }
 
+        /// <summary>
+        /// Gets or sets the user.
+        /// </summary>
+        /// <value>
+        /// The user.
+        /// </value>
         [DataMember(Name = "user")]
         public User User
         {
@@ -56,7 +63,7 @@ namespace Keystone.Core
         /// The metadata.
         /// </value>
         [DataMember(Name = "metadata")]
-        public Metadata Metadata
+        public UserMetadata Metadata
         {
             get;
             set;

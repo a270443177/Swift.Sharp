@@ -17,13 +17,14 @@ namespace Keystone.Core
     internal class KeystoneRequest
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="KeystoneTokenRequest"/> class.
+        /// Initializes a new instance of the <see cref="KeystoneRequest"/> class.
         /// </summary>
         /// <param name="username">The username.</param>
         /// <param name="password">The password.</param>
+        /// <param name="tenantName">The tenant name</param>
         internal KeystoneRequest(string username, string password, string tenantName)
         {
-            this.auth = new Authentication(username, password, tenantName);
+            this.Authentication = new Authentication(username, password, tenantName);
         }
 
         /// <summary>
@@ -33,7 +34,7 @@ namespace Keystone.Core
         /// The auth.
         /// </value>
         [DataMember(Name = "auth")]
-        public Authentication auth
+        public Authentication Authentication
         {
             get;
             set;

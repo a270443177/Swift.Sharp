@@ -91,13 +91,13 @@ namespace SwiftSharp.Core.XUnit
         private static Tuple<Uri,string> GetKeystoneToken()
         {
             CancellationTokenSource tokenSource = new CancellationTokenSource();
-            Keystone.Core.Keystone keystone = new Keystone.Core.Keystone();
+            Keystone.Core.KeystoneClient keystone = new Keystone.Core.KeystoneClient();
             var tsk = keystone.GetToken(keystoneServer, realUsername, realPassword, realTenant, tokenSource.Token);
             Keystone.Core.KeystoneResponse response = tsk.Result;
 
             System.Diagnostics.Trace.WriteLine("Swift endpoint: " );
 
-            var zz = response.Access.ServiceCatalog.Where(c => c.Name.Equals("swift")).FirstOrDefault().EndpointsColl.Where(e => !string.IsNullOrEmpty(e.PublicUrl)).Select(x => x);
+            var zz = response.Access.ServiceCatalog.Where(c => c.Name.Equals("swift")).FirstOrDefault().EndpointsCollection.Where(e => !string.IsNullOrEmpty(e.PublicUrl)).Select(x => x);
 
             //zz.AsParallel().ForAll(e => System.Diagnostics.Trace.WriteLine(e.PublicUrl));
 

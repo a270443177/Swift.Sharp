@@ -20,12 +20,26 @@ namespace Keystone.Core
         /// </summary>
         /// <param name="username">The username.</param>
         /// <param name="password">The password.</param>
+        /// <param name="tenantName">The tenant</param>
         internal Authentication(string username, string password, string tenantName)
         {
-            this.passwordCredentials = new Credentials();
-            this.passwordCredentials.username = username;
-            this.passwordCredentials.password = password;
+            this.PasswordCredentials = new Credentials();
+            this.PasswordCredentials.Username = username;
+            this.PasswordCredentials.Password = password;
             this.TenantName = tenantName;
+        }
+
+        /// <summary>
+        /// Gets or sets the password credentials.
+        /// </summary>
+        /// <value>
+        /// The password credentials.
+        /// </value>
+        [DataMember(Name = "passwordCredentials")]
+        public Credentials PasswordCredentials
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -36,19 +50,6 @@ namespace Keystone.Core
         /// </value>
         [DataMember(Name = "tenantName")]
         internal string TenantName
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets the password credentials.
-        /// </summary>
-        /// <value>
-        /// The password credentials.
-        /// </value>
-        [DataMember(Name = "passwordCredentials")]
-        public Credentials passwordCredentials
         {
             get;
             set;

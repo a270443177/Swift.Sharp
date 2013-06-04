@@ -21,16 +21,26 @@ namespace SwiftSharp.Core
     /// </summary>
     public class Swift
     {
-        private SwiftCreadentials creadentials;
+        private SwiftCreadentials credentials;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Swift"/> class.
+        /// </summary>
+        /// <param name="endpoint">The endpoint.</param>
+        /// <param name="token">The token.</param>
+        /// <param name="tenant">The tenant.</param>
         public Swift(Uri endpoint, string token, string tenant) : this (new SwiftCreadentials(endpoint, token, tenant))
         {
 
         }
 
-        public Swift(SwiftCreadentials creadentials)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Swift"/> class.
+        /// </summary>
+        /// <param name="credentials">The credentials.</param>
+        public Swift(SwiftCreadentials credentials)
         {
-            this.creadentials = creadentials;
+            this.credentials = credentials;
         }
 
         /// <summary>
@@ -40,7 +50,7 @@ namespace SwiftSharp.Core
         /// <returns>Awaitable task with result as <seealso cref="AccountDetails"/></returns>
         public Task<AccountDetails> GetAccountDetails(CancellationToken cancellationToken)
         {
-            GenericDataProvider request = AccountFactory.BuildRequest(this.creadentials, HttpMethod.Get);
+            GenericDataProvider request = AccountFactory.BuildRequest(this.credentials, HttpMethod.Get);
 
             RestClient<GenericDataProvider, AccountDetailsParser> client = new RestClient<GenericDataProvider, AccountDetailsParser>();
             var tsk = client.Execute(request, cancellationToken);

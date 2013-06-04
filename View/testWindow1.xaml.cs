@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------------------------
-// <copyright file="testWindow1.xaml.cs" company="Walletex Microelectronics LTD">
-//     Copyright (c) Walletex Microelectronics LTD, Israel 2011. All rights reserved.
+// <copyright file="testWindow1.xaml.cs" company="">
+//     Copyright (c) Israel 2013. All rights reserved.
 //     Author: alex
-//     Date: 27-5-2013
+//     Date: 4-6-2013
 // </copyright>
 // -----------------------------------------------------------------------------
 using System;

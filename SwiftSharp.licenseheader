@@ -1,8 +1,8 @@
 extensions: designer.cs generated.cs
 extensions: .cs .cpp .h
 // ---------------------------------------------------------------------------
-// <copyright file="%FileName%" company="Walletex Microelectronics LTD">
-//     Copyright (c) Walletex Microelectronics LTD, Israel 2011. All rights reserved.
+// <copyright file="%FileName%" company="">
+//     Copyright (c) Israel 2013. All rights reserved.
 //     Author: %UserName%
 //     Date: %CurrentDay%-%CurrentMonth%-%CurrentYear%
 // </copyright>
@@ -10,8 +10,8 @@ extensions: .cs .cpp .h
 extensions: .aspx .ascx
 <%-- 
 // ---------------------------------------------------------------------------
-// <copyright file="%FileName%" company="Walletex Microelectronics LTD">
-//     Copyright (c) Walletex Microelectronics LTD, Israel 2011. All rights reserved.
+// <copyright file="%FileName%" company="">
+//     Copyright (c) Israel 2013. All rights reserved.
 //     Author: %UserName%
 //     Date: %CurrentDay%-%CurrentMonth%-%CurrentYear%
 // </copyright>
@@ -22,8 +22,8 @@ extensions: .vb
 extensions:  .xml .config .xsd
 <!--
 // ---------------------------------------------------------------------------
-// <copyright file="%FileName%" company="Walletex Microelectronics LTD">
-//     Copyright (c) Walletex Microelectronics LTD, Israel 2011. All rights reserved.
+// <copyright file="%FileName%" company="">
+//     Copyright (c) Israel 2013. All rights reserved.
 //     Author: %UserName%
 //     Date: %CurrentDay%-%CurrentMonth%-%CurrentYear%
 // </copyright>

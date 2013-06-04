@@ -6,16 +6,21 @@
 //     Date: 3-6-2013
 // </copyright>
 // -----------------------------------------------------------------------------
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace SwiftSharp.Core
 {
+    using System;
+
+    /// <summary>
+    /// Factory object for creating <see cref="GenericDataProvider"/> object
+    /// </summary>
     internal class AccountFactory
     {
+        /// <summary>
+        /// Builds the request object <seealso cref="GenericDataProvider"/>
+        /// </summary>
+        /// <param name="credentials">The credentials.</param>
+        /// <param name="method">The method.</param>
+        /// <returns><see cref="GenericDataProvider"/> object</returns>
         internal static GenericDataProvider BuildRequest(SwiftCreadentials credentials, HttpMethod method)
         {
             GenericDataProvider requestData = null;

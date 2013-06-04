@@ -60,20 +60,22 @@ namespace SwiftSharp.Core
         /// <summary>
         /// The header name that define 'bytes used'
         /// </summary>
-        private const string HEADER_BYTES_USED = "X-Account-Bytes-Used";
+        internal const string HEADER_BYTES_USED = "X-Account-Bytes-Used";
 
         /// <summary>
         /// The header name that defined 'headers count'
         /// </summary>
-        private const string HEADER_CONTAINERS_COUNT = "X-Account-Container-Count";
+        internal const string HEADER_CONTAINERS_COUNT = "X-Account-Container-Count";
 
         /// <summary>
         /// The header name that define 'objects count'
         /// </summary>
-        private const string HEADER_OBJECT_COUNT = "X-Account-Object-Count";
+        internal const string HEADER_OBJECT_COUNT = "X-Account-Object-Count";
 
-
-        private AccountDetails details;
+        /// <summary>
+        /// The data object
+        /// </summary>
+        private AccountDetails details = null;
 
         /// <summary>
         /// Builds from web response.
@@ -104,16 +106,23 @@ namespace SwiftSharp.Core
 
             //
             // BytesUsed
-            strData = webResponseDetails.Headers[HEADER_BYTES_USED];
-            if (string.IsNullOrEmpty(strData) == false)
+            if (webResponseDetails.Headers.ContainsKey(HEADER_BYTES_USED))
             {
-                if (int.TryParse(strData, out iData))
+                strData = webResponseDetails.Headers[HEADER_BYTES_USED];
+                if (string.IsNullOrEmpty(strData) == false)
                 {
-                    details.BytesUsed = iData;
+                    if (int.TryParse(strData, out iData))
+                    {
+                        details.BytesUsed = iData;
+                    }
+                    else
+                    {
+                        throw new FormatException("Header parameter 'BytesCount' could not be converted to integer value. Raw data: " + strData);
+                    }
                 }
                 else
                 {
-                    throw new FormatException("Header parameter 'BytesCount' could not be converted to integer value. Raw data: " + strData);
+                    details.BytesUsed = 0;
                 }
             }
             else
@@ -123,16 +132,23 @@ namespace SwiftSharp.Core
 
             //
             // Containers count
-            strData = webResponseDetails.Headers[HEADER_CONTAINERS_COUNT];
-            if (string.IsNullOrEmpty(strData) == false)
+            if (webResponseDetails.Headers.ContainsKey(HEADER_CONTAINERS_COUNT))
             {
-                if (int.TryParse(strData, out iData))
+                strData = webResponseDetails.Headers[HEADER_CONTAINERS_COUNT];
+                if (string.IsNullOrEmpty(strData) == false)
                 {
-                    details.ContainerCount = iData;
+                    if (int.TryParse(strData, out iData))
+                    {
+                        details.ContainerCount = iData;
+                    }
+                    else
+                    {
+                        throw new FormatException("Header parameter 'Container count' could not be converted to integer value. Raw data: " + strData);
+                    }
                 }
                 else
                 {
-                    throw new FormatException("Header parameter 'Container count' could not be converted to integer value. Raw data: " + strData);
+                    details.ContainerCount = 0;
                 }
             }
             else
@@ -142,16 +158,23 @@ namespace SwiftSharp.Core
 
             //
             // Object count
-            strData = webResponseDetails.Headers[HEADER_OBJECT_COUNT];
-            if (string.IsNullOrEmpty(strData) == false)
+            if (webResponseDetails.Headers.ContainsKey(HEADER_OBJECT_COUNT))
             {
-                if (int.TryParse(strData, out iData))
+                strData = webResponseDetails.Headers[HEADER_OBJECT_COUNT];
+                if (string.IsNullOrEmpty(strData) == false)
                 {
-                    details.ObjectsCount = iData;
+                    if (int.TryParse(strData, out iData))
+                    {
+                        details.ObjectsCount = iData;
+                    }
+                    else
+                    {
+                        throw new FormatException("Header parameter 'Object count' could not be converted to integer value. Raw data: " + strData);
+                    }
                 }
                 else
                 {
-                    throw new FormatException("Header parameter 'Object count' could not be converted to integer value. Raw data: " + strData);
+                    details.ObjectsCount = 0;
                 }
             }
             else

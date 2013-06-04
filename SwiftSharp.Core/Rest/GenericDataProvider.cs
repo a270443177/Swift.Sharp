@@ -23,7 +23,6 @@ namespace SwiftSharp.Core.Rest
             this.Endpoint = credentials.Endpoint;
 
             this.HeaderParams = new Dictionary<string, string>();
-            this.HeaderParams.Add("X-Auth-User", credentials.Username);
             this.HeaderParams.Add("X-Auth-Token", credentials.Token);
             
             this.Method = method;

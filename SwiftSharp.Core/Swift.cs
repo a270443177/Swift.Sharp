@@ -23,7 +23,7 @@ namespace SwiftSharp.Core
     {
         private SwiftCreadentials creadentials;
 
-        public Swift(Uri endpoint, string username, string token, string tenant) : this (new SwiftCreadentials(endpoint, username, token, tenant))
+        public Swift(Uri endpoint, string token, string tenant) : this (new SwiftCreadentials(endpoint, token, tenant))
         {
 
         }
@@ -33,6 +33,11 @@ namespace SwiftSharp.Core
             this.creadentials = creadentials;
         }
 
+        /// <summary>
+        /// Gets the account details.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>Awaitable task with result as <seealso cref="AccountDetails"/></returns>
         public Task<AccountDetails> GetAccountDetails(CancellationToken cancellationToken)
         {
             GenericDataProvider request = AccountFactory.BuildRequest(this.creadentials, HttpMethod.Get);
@@ -40,14 +45,10 @@ namespace SwiftSharp.Core
             RestClient<GenericDataProvider, AccountDetailsParser> client = new RestClient<GenericDataProvider, AccountDetailsParser>();
             var tsk = client.Execute(request, cancellationToken);
 
-            var tskResult = tsk.ContinueWith<AccountDetails>(tsk1 => {
-                return tsk1.Result.Data as AccountDetails;
+            return tsk.ContinueWith<AccountDetails>(tskOk => {
+                return tskOk.Result.Data as AccountDetails;
             }
-            , cancellationToken
-            , TaskContinuationOptions.OnlyOnRanToCompletion
-            , TaskScheduler.Default);
-
-            return tskResult;
+            , cancellationToken);
         }
     }
 }

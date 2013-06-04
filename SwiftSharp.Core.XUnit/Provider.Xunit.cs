@@ -38,9 +38,9 @@ namespace SwiftSharp.Core.XUnit
 
         [Theory(DisplayName = "Test connection to SWIFT server")]
         [PropertyData("ConnectionParameters")]
-        public void TestConnection(string username, string token, Uri swiftEndpoint)
+        public void TestConnection(string token, Uri swiftEndpoint)
         {
-            swiftclient = new Swift(swiftEndpoint, username, token, realTenant);
+            swiftclient = new Swift(swiftEndpoint, token, realTenant);
 
             if (swiftEndpoint != null)
             {

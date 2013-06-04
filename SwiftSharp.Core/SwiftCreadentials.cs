@@ -14,12 +14,17 @@ namespace SwiftSharp.Core
     /// </summary>
     public class SwiftCreadentials
     {
-        public SwiftCreadentials(Uri endpoint, string username, string token, string tenant)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SwiftCreadentials"/> class.
+        /// </summary>
+        /// <param name="endpoint">The endpoint.</param>
+        /// <param name="token">The token.</param>
+        /// <param name="tenant">The tenant.</param>
+        public SwiftCreadentials(Uri endpoint, string token, string tenant)
         {
             this.Endpoint = endpoint;
             this.Tenant = tenant;
             this.Token = token;
-            this.Username = username;
         }
 
         /// <summary>
@@ -29,18 +34,6 @@ namespace SwiftSharp.Core
         /// The endpoint.
         /// </value>
         public Uri Endpoint
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets the username.
-        /// </summary>
-        /// <value>
-        /// The username.
-        /// </value>
-        public string Username
         {
             get;
             set;

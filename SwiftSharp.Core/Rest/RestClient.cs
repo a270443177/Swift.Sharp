@@ -9,6 +9,7 @@ namespace SwiftSharp.Core.Rest
 {
     using System.Linq;
     using System.Net;
+    using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -57,7 +58,25 @@ namespace SwiftSharp.Core.Rest
 
             return Task.Factory.StartNew<TResponse>(() =>
             {
-                WebResponse response = request.GetResponse();
+                WebResponse response = null;
+                try
+                {
+                    response = request.GetResponse();
+                }
+                catch (WebException exp_web)
+                {
+                    string errorData = BuildError(exp_web, requestData);
+                    System.Diagnostics.Trace.WriteLine(errorData);
+
+                    if (exp_web.Status == WebExceptionStatus.ProtocolError)
+                    {
+                        throw new System.UnauthorizedAccessException(errorData, exp_web);
+                    }
+                    else
+                    {
+                        throw exp_web;
+                    }
+                }
                 
                 TResponse responseObject = new TResponse();
                 responseObject.BuildFromWebResponse(new WebResponseDetails(response));
@@ -66,6 +85,50 @@ namespace SwiftSharp.Core.Rest
             , cancellationToken
             , TaskCreationOptions.LongRunning
             , TaskScheduler.Current);
+        }
+
+        /// <summary>
+        /// Builds the error information
+        /// </summary>
+        /// <param name="exception">The exception.</param>
+        /// <param name="originalRequest">The original request.</param>
+        /// <returns>Error information as text</returns>
+        protected string BuildError(WebException exception, TRequest originalRequest)
+        {
+            StringBuilder errorString = new StringBuilder();
+            errorString.AppendLine("[RestClient::Execute] Exception occurred while trying to communicate with SWIFT server");
+            errorString.AppendLine("Diagnostic data");
+            errorString.AppendLine("\tEndpoint:\t" + originalRequest.Endpoint.ToString());
+            errorString.AppendLine("\tMethod:\t" + originalRequest.Method);
+            errorString.AppendLine("\tHeaders:");
+            if (originalRequest.HeaderParams.Count > 0)
+            {
+                foreach (string key in originalRequest.HeaderParams.Keys)
+                {
+                    errorString.AppendFormat("\t\t{0}:\t{1}\n", key, originalRequest.HeaderParams[key]);
+                }
+            }
+            else
+            {
+                errorString.AppendLine("\t\t<empty>");
+            }
+
+            errorString.AppendLine("\tQuery parameters:");
+            if (originalRequest.QueryParams.Count > 0)
+            {
+                foreach (string key in originalRequest.QueryParams.Keys)
+                {
+                    errorString.AppendFormat("\t\t{0}:\t{1}\n", key, originalRequest.QueryParams[key]);
+                }
+            }
+            else
+            {
+                errorString.AppendLine("\t\t<empty>");
+            }
+            errorString.AppendLine("\tException:");
+            errorString.AppendLine("\t\t" + exception.ToString());
+
+            return errorString.ToString();
         }
     }
 }

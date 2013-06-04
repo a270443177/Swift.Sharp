@@ -55,6 +55,7 @@
     <Compile Include="Components\AccountDetailsTester.cs" />
     <Compile Include="Provider.Xunit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Swift.AccountDetails.XUnit.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

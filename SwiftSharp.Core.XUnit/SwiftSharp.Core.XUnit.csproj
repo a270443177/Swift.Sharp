@@ -52,10 +52,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\AccountDetailsTester.cs" />
+    <Compile Include="Components\AccountDetails.XUnit.cs" />
+    <Compile Include="Components\ContainerCollectionParser.XUnit.cs" />
+    <Compile Include="KeystoneData.cs" />
     <Compile Include="Provider.Xunit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Swift.AccountDetails.XUnit.cs" />
+    <Compile Include="Swift.ContanerCollection.XUnit.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

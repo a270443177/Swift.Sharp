@@ -17,59 +17,19 @@ using SwiftSharp.Core.Rest;
 
 namespace SwiftSharp.Core.XUnit
 {
-    public class SwiftAccountDetailsXunit
+    public class SwiftAccountDetailsXunit : KeystoneData
     {
         private CancellationTokenSource tokenSource;
 
         private Swift swiftclient;
 
-        private static Uri keystoneServer = new Uri("http://10.0.0.195:35357/v2.0/tokens");
-        private static string keystoneUser = "alex";
-        private static string keystoneUserPassword = "123456";
-        private static string keystoneTenant = "test";
         private Tuple<Uri, string> swiftConnectionData;
 
-        private static Tuple<Uri, string> GetKeystoneToken()
+        public SwiftAccountDetailsXunit() : base ()
         {
-            CancellationTokenSource tokenSource = new CancellationTokenSource();
-            Keystone.Core.KeystoneClient keystone = new Keystone.Core.KeystoneClient();
-            var tsk = keystone.GetToken(keystoneServer, keystoneUser, keystoneUserPassword, keystoneTenant, tokenSource.Token);
-            Keystone.Core.KeystoneResponse response = tsk.Result;
-
-            System.Diagnostics.Trace.WriteLine("Swift endpoint: ");
-
-            var zz = response.Access.ServiceCatalog.Where(c => c.Name.Equals("swift")).FirstOrDefault().EndpointsCollection.Where(e => !string.IsNullOrEmpty(e.PublicUrl)).Select(x => x);
-
-            //zz.AsParallel().ForAll(e => System.Diagnostics.Trace.WriteLine(e.PublicUrl));
-
-            //return response.Access.Token.Id;
-            return new Tuple<Uri, string>(new Uri(zz.FirstOrDefault().PublicUrl), response.Access.Token.Id);
         }
 
-        public SwiftAccountDetailsXunit()
-        {
-            //
-            // Test that keystone server is exist and kicking
-            HttpWebRequest request = WebRequest.Create(keystoneServer) as HttpWebRequest;
-            try
-            {
-                request.GetResponse();
-            }
-            catch (WebException exp_web)
-            {
-                if (exp_web.Status == WebExceptionStatus.Timeout)
-                {
-                    System.Diagnostics.Trace.WriteLine("[SwiftAccountDetailsXunit::ctor] Keystone server at address: " + keystoneServer.ToString() + " is not responding");
-                    throw exp_web;
-                }
-                else
-                {
-                    // any other response is good
-                }
-            }
-        }
-
-        [Fact(DisplayName = "Swift should fail on wrong endpoint")]
+        [Fact(DisplayName = "[AccountDetails] Swift should fail on wrong endpoint")]
         public void Should_throw_on_wrong_endpoint()
         {
             tokenSource = new CancellationTokenSource();
@@ -77,7 +37,7 @@ namespace SwiftSharp.Core.XUnit
 
             //Uri endpoint, string token, string tenant
             Uri wrongUri = new Uri("http://1.1.1.1");
-            swiftclient = new Swift(wrongUri, swiftConnectionData.Item2, keystoneTenant);
+            swiftclient = new Swift(wrongUri, swiftConnectionData.Item2, KeystoneData.keystoneTenant);
 
             Assert.Throws(typeof(AggregateException), () => {
                 var tsk = swiftclient.GetAccountDetails(tokenSource.Token);
@@ -85,14 +45,14 @@ namespace SwiftSharp.Core.XUnit
             });
         }
 
-        [Fact(DisplayName = "Swift should fail on wrong token")]
+        [Fact(DisplayName = "[AccountDetails] Swift should fail on wrong token")]
         public void Should_fail_on_wrong_token()
         {
             tokenSource = new CancellationTokenSource();
-            swiftConnectionData = GetKeystoneToken();
+            swiftConnectionData = KeystoneData.GetKeystoneToken();
 
             //Uri endpoint, string token, string tenant
-            swiftclient = new Swift(swiftConnectionData.Item1, "$$wrong_token", keystoneTenant);
+            swiftclient = new Swift(swiftConnectionData.Item1, "$$wrong_token", KeystoneData.keystoneTenant);
 
             Assert.Throws(typeof(AggregateException), () =>
             {
@@ -125,13 +85,13 @@ namespace SwiftSharp.Core.XUnit
             }
         }
 
-        [Fact(DisplayName = "Correctly bring AccountDetails object")]
+        [Fact(DisplayName = "[AccountDetails] Correctly bring AccountDetails object")]
         public void Work_normally()
         {
-            swiftConnectionData = GetKeystoneToken();
+            swiftConnectionData = KeystoneData.GetKeystoneToken();
             tokenSource = new CancellationTokenSource();
 
-            swiftclient = new Swift(swiftConnectionData.Item1, swiftConnectionData.Item2, keystoneTenant);
+            swiftclient = new Swift(swiftConnectionData.Item1, swiftConnectionData.Item2, KeystoneData.keystoneTenant);
 
             AccountDetails accountDetails = null;
 

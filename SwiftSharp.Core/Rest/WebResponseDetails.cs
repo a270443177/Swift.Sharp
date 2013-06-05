@@ -41,7 +41,7 @@ namespace SwiftSharp.Core.Rest
             // Copy body (raw)
             try
             {
-                StreamReader reader = new StreamReader(webResponse.GetResponseStream(), System.Text.Encoding.Unicode);
+                StreamReader reader = new StreamReader(webResponse.GetResponseStream(), System.Text.Encoding.Default);
                 this.Body = reader.ReadToEnd();
             }
             catch (ArgumentNullException exp_null)

@@ -54,6 +54,14 @@ namespace SwiftSharp.Core.Rest
 
             request.Method = requestData.Method;
 
+            if (string.IsNullOrEmpty(requestData.Content) == false)
+            {
+                using (System.IO.StreamWriter writer =  new System.IO.StreamWriter(request.GetRequestStream()))
+                {
+                    writer.Write(requestData.Content);
+                }
+            }
+
             cancellationToken.ThrowIfCancellationRequested();
 
             return Task.Factory.StartNew<TResponse>(() =>
@@ -125,6 +133,16 @@ namespace SwiftSharp.Core.Rest
             {
                 errorString.AppendLine("\t\t<empty>");
             }
+            errorString.AppendLine("\tContent:");
+            if (string.IsNullOrEmpty(originalRequest.Content))
+            {
+                errorString.AppendLine("\t\t<empty>");
+            }
+            else
+            {
+                errorString.AppendLine(originalRequest.Content);
+            }
+
             errorString.AppendLine("\tException:");
             errorString.AppendLine("\t\t" + exception.ToString());
 

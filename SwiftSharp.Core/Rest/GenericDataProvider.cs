@@ -16,16 +16,32 @@ namespace SwiftSharp.Core.Rest
     internal class GenericDataProvider
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GenericDataProvider"/> class.
+        /// Initializes a new instance of the <see cref="GenericDataProvider" /> class.
         /// </summary>
-        internal GenericDataProvider(SwiftCreadentials credentials, string method)
+        /// <param name="credentials">The credentials.</param>
+        /// <param name="method">The method.</param>
+        internal GenericDataProvider(SwiftCreadentials credentials, HttpMethod method)
         {
             this.Endpoint = credentials.Endpoint;
 
             this.HeaderParams = new Dictionary<string, string>();
             this.HeaderParams.Add("X-Auth-Token", credentials.Token);
             
-            this.Method = method;
+            switch(method)
+            {
+                case HttpMethod.Delete:
+                    this.Method = "DELETE";
+                    break;
+                case HttpMethod.Get:
+                    this.Method = "GET";
+                    break;
+                case HttpMethod.Head:
+                    this.Method = "HEAD";
+                    break;
+                case HttpMethod.Put:
+                    this.Method = "PUT";
+                    break;
+            }
             
             this.QueryParams = new Dictionary<string, string>();
         }
@@ -61,5 +77,13 @@ namespace SwiftSharp.Core.Rest
         /// The method.
         /// </value>
         internal string Method { get; set; }
+
+        /// <summary>
+        /// Gets or sets the content of request
+        /// </summary>
+        /// <value>
+        /// The content of the request
+        /// </value>
+        internal string Content { get; set; }
     }
 }

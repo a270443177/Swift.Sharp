@@ -26,7 +26,7 @@ namespace SwiftSharp.Core.XUnit.Components
             accountDetailsParser = new AccountDetailsParser();
         }
 
-        [Fact(DisplayName = "AccountDetailsParser won't work with empty stream")]
+        [Fact(DisplayName = "[AccountDetailsParser] Won't work with empty stream")]
         public void Should_throw_on_empty_response()
         {
             Assert.Throws(typeof(ArgumentException), () => {
@@ -34,7 +34,7 @@ namespace SwiftSharp.Core.XUnit.Components
             });
         }
 
-        [Fact(DisplayName = "AccountDetailsParser should not fail on empty headers")]
+        [Fact(DisplayName = "[AccountDetailsParser] Should not fail on empty headers")]
         public void Should_not_throw_on_missing_headers()
         {
             IWebResponseDetails details = MockRepository.GenerateMock<IWebResponseDetails>(null);
@@ -54,7 +54,7 @@ namespace SwiftSharp.Core.XUnit.Components
             Assert.Equal(accountDetails.ObjectsCount, 0);
         }
 
-        [Fact(DisplayName = "AccountDetailsParser should throw on incorrect headers")]
+        [Fact(DisplayName = "[AccountDetailsParser] Should throw on incorrect headers")]
         public void Should_throw_on_incorrect_headers()
         {
             Dictionary<string, string> wrongHeaders = new Dictionary<string, string>();
@@ -74,7 +74,7 @@ namespace SwiftSharp.Core.XUnit.Components
             Assert.Equal(accountDetails.BytesUsed, 0);
         }
 
-        [Fact(DisplayName = "AccountDetailsParser should return null data before parse")]
+        [Fact(DisplayName = "[AccountDetailsParser] Should return null data before parse")]
         public void Parser_before_build_should_return_null_data()
         {
             Assert.Null(accountDetailsParser.Data);

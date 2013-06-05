@@ -48,6 +48,7 @@ namespace SwiftSharp.Core
         public Task<AccountDetails> GetAccountDetails(CancellationToken cancellationToken)
         {
             GenericDataProvider request = new GenericDataProvider(this.credentials, HttpMethod.Head);
+            request.QueryParams.Add("format", "json");
 
             RestClient<GenericDataProvider, AccountDetailsParser> client = new RestClient<GenericDataProvider, AccountDetailsParser>();
             var tsk = client.Execute(request, cancellationToken);

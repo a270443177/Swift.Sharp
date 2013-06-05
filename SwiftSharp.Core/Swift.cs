@@ -66,6 +66,7 @@ namespace SwiftSharp.Core
         public Task<ContainerCollection> GetContainers(CancellationToken cancellationToken)
         {
             GenericDataProvider request = new GenericDataProvider(this.credentials, HttpMethod.Get);
+            request.QueryParams.Add("format", "json");
 
             RestClient<GenericDataProvider, ContainerCollectionParser> client = new RestClient<GenericDataProvider, ContainerCollectionParser>();
             var tsk = client.Execute(request, cancellationToken);

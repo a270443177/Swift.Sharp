@@ -45,7 +45,7 @@ namespace SwiftSharp.Core.XUnit.Components
                 containerCollectionParser.BuildFromWebResponse(details);
             });
 
-            Assert.NotNull(containerCollectionParser.Data.Names);
+            Assert.NotNull(containerCollectionParser.Data);
         }
 
         [Fact(DisplayName = "[ContainerCollectionParser] Should not throw on empty 'body'")]

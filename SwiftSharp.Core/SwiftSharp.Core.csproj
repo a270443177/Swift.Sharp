@@ -44,10 +44,9 @@
     <Compile Include="Authentication\IAuthenticationProvider.cs" />
     <Compile Include="Authentication\IAuthToken.cs" />
     <Compile Include="Authentication\AuthToken.cs" />
+    <Compile Include="Container.cs" />
     <Compile Include="ContainerCollection.cs" />
-    <Compile Include="Provider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProviderBase.cs" />
     <Compile Include="Rest\GenericDataProvider.cs" />
     <Compile Include="Rest\HttpMethod.cs" />
     <Compile Include="Rest\IWebResponseDetails.cs" />

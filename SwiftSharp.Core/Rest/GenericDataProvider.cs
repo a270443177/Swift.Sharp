@@ -44,6 +44,11 @@ namespace SwiftSharp.Core.Rest
             }
             
             this.QueryParams = new Dictionary<string, string>();
+
+            if (string.IsNullOrEmpty(credentials.Tenant) == false)
+            {
+                this.QueryParams.Add("tenant_id", credentials.Tenant);
+            }
         }
 
         /// <summary>

@@ -46,7 +46,9 @@ namespace SwiftSharp.Core.XUnit
             });
 
             Assert.NotNull(containerCollection);
-            Assert.NotNull(containerCollection.Names);
+
+            System.Diagnostics.Trace.WriteLine("Found: " + containerCollection.Count.ToString() + " containers");
+            containerCollection.AsParallel().ForAll(cont => System.Diagnostics.Trace.WriteLine("Container name: " + cont.Name));
         }
 
         [Fact(DisplayName = "[ContainerCollectionParser] Create new container and ensure that it listed")]
@@ -67,8 +69,7 @@ namespace SwiftSharp.Core.XUnit
             });
 
             Assert.NotNull(containerCollection);
-            Assert.NotNull(containerCollection.Names);
-            Assert.True(containerCollection.Names.Contains(containerName));
+            Assert.True(containerCollection.Any(c => c.Name.Equals(containerName)));
         }
     }
 }

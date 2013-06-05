@@ -10,11 +10,13 @@ namespace SwiftSharp.Core
     using SwiftSharp.Core.Rest;
     using System;
     using System.Collections.Generic;
+    using System.IO;
+    using System.Runtime.Serialization.Json;
 
     /// <summary>
     /// Swift containers collection object
     /// </summary>
-    public class ContainerCollection
+    public class ContainerCollection : List<Container>
     {
         /// <summary>
         /// Gets or sets the bytes used.
@@ -35,18 +37,6 @@ namespace SwiftSharp.Core
         /// The container count.
         /// </value>
         public int ContainerCount
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets the names of containers
-        /// </summary>
-        /// <value>
-        /// The names of containers
-        /// </value>
-        public List<string> Names
         {
             get;
             set;
@@ -171,11 +161,23 @@ namespace SwiftSharp.Core
 
             //
             // Body
-            data.Names = new List<string>();
             if (string.IsNullOrEmpty(webResponseDetails.Body) == false)
             {
-                string[] names = webResponseDetails.Body.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
-                data.Names.AddRange(names);
+                List<Container> tmpContainers = new List<Container>();
+                using (MemoryStream mStream = new MemoryStream(System.Text.Encoding.Default.GetBytes(webResponseDetails.Body)))
+                {
+                    DataContractJsonSerializer deSerializer = new DataContractJsonSerializer(tmpContainers.GetType());
+                    try
+                    {
+                        tmpContainers = deSerializer.ReadObject(mStream) as List<Container>;
+                        data.AddRange(tmpContainers);
+                    }
+                    catch (FormatException exp_format)
+                    {
+                        System.Diagnostics.Trace.WriteLine("[ContainerCollectionParser::BuildFromWebResponse] Could not desterilize data. Raw data: " + webResponseDetails.Body + "\n\nException: " + exp_format.ToString());
+                        throw;
+                    }
+                }
             }
         }
     }

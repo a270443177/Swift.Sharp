@@ -74,7 +74,13 @@ namespace SwiftSharp.Core
 
             return tsk.ContinueWith<ContainerCollection>(tskOk =>
             {
-                return tskOk.Result.Data as ContainerCollection;
+                ContainerCollection coll = tskOk.Result.Data as ContainerCollection;
+                foreach (Container container in coll)
+                {
+                    string endpoint = this.credentials.Endpoint.ToString() + "/" + container.Name;
+                    container.Endpoint = new Uri(endpoint);
+                }
+                return coll; ;
             }
             , cancellationToken);
         }
@@ -105,11 +111,65 @@ namespace SwiftSharp.Core
 
             return tsk.ContinueWith<ContainerCollection>(tskOk =>
             {
+                return GetContainers(cancellationToken).Result;
+            }
+            , cancellationToken);
+        }
+
+        /// <summary>
+        /// Deletes the container.
+        /// </summary>
+        /// <param name="containerName">Name of the container.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns></returns>
+        public Task<ContainerCollection> DeleteContainer(string containerName, CancellationToken cancellationToken)
+        {
+            var tsk = GetContainers(cancellationToken);
+            ContainerCollection containerCollection = tsk.Result;
+            Container deleteContainer = null;
+
+
+            foreach (Container container in containerCollection)
+            {
+                if (container.Name.Equals(containerName))
+                {
+                    deleteContainer = container;
+                }
+            }
+
+            if (deleteContainer != null)
+            {
+                return DeleteContainer(deleteContainer, cancellationToken);
+            }
+            else
+            {
+                throw new ArgumentNullException("containerName", "Container is not found");
+            }
+        }
+
+        /// <summary>
+        /// Deletes the container.
+        /// </summary>
+        /// <param name="container">The container.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns></returns>
+        public Task<ContainerCollection> DeleteContainer(Container container, CancellationToken cancellationToken)
+        {
+            GenericDataProvider request = new GenericDataProvider(this.credentials, HttpMethod.Delete);
+
+            request.Endpoint = container.Endpoint;
+
+            RestClient<GenericDataProvider, ContainerCollectionParser> client = new RestClient<GenericDataProvider, ContainerCollectionParser>();
+            var tsk = client.Execute(request, cancellationToken);
+
+            return tsk.ContinueWith<ContainerCollection>(tskOk =>
+            {
                 //return tskOk.Result.Data as ContainerCollection;
 
                 return GetContainers(cancellationToken).Result;
             }
             , cancellationToken);
+
         }
     }
 }

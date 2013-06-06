@@ -31,7 +31,7 @@ namespace Keystone.Core
         /// <returns>Awaitable task with <c>result</c> of token</returns>
         public Task<KeystoneResponse> GetToken(Uri keystoneServer, string userName, string password, string tenantName, CancellationToken cancellationToken)
         {
-            return Task<KeystoneResponse>.Factory.StartNew(() =>
+            return Task.Factory.StartNew <KeystoneResponse>(() =>
             {
                 if (keystoneServer.Segments.Count() < 2)
                 {
@@ -68,15 +68,16 @@ namespace Keystone.Core
                 cancellationToken.ThrowIfCancellationRequested();
 
                 System.Diagnostics.Trace.WriteLine("[Keystone::GetToken] Going to request token from: Server: [" + keystoneServer.ToString() + "] with Username: [" + userName + "] Password: [" + password + "] for Tenant: [" + tenantName + "]");
+                
                 var tskResponse = request.GetResponseAsync();
 
                 cancellationToken.ThrowIfCancellationRequested();
 
-                var tsk1 = tskResponse.ContinueWith<KeystoneResponse>((tskOk) =>
+                try
                 {
                     System.Diagnostics.Trace.WriteLine("[Keystone::GetToken] Connected to server: " + keystoneServer.ToString() + " with username: " + userName + " password: " + password);
 
-                    WebResponse response = tskOk.Result;
+                    WebResponse response = tskResponse.Result;
 
                     DataContractJsonSerializer deSerializer = new DataContractJsonSerializer(typeof(KeystoneResponse));
                     try
@@ -96,27 +97,28 @@ namespace Keystone.Core
 
                         return kResponse;
                     }
-                    catch (Exception exp_gen)
+                    catch (FormatException exp_gen)
                     {
                         throw;
                     }
 
                 }
-                , cancellationToken
-                , TaskContinuationOptions.OnlyOnRanToCompletion
-                , TaskScheduler.Default);
-
-                tskResponse.ContinueWith(tskBad =>
+                catch (Exception exp_gen)
                 {
                     System.Diagnostics.Trace.WriteLine("[Keystone::GetToken] Exception occurred while connecting to server: [" + keystoneServer.ToString() + "] with username: [" + userName + "] password: [" + password + "]");
 
-                    System.Diagnostics.Debug.WriteLine("[Keystone::GetToken] Throw exception: " + tskBad.Exception.ToString());
-
-                    throw tskBad.Exception;
+                    WebException exp_web = exp_gen.InnerException as WebException;
+                    if (exp_web != null)
+                    {
+                        StreamReader reader = new StreamReader(exp_web.Response.GetResponseStream());
+                        AggregateException exp_agr = new AggregateException(reader.ReadToEnd(), exp_web);
+                        throw exp_agr;
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
-                , TaskContinuationOptions.OnlyOnFaulted);
-
-                return tsk1.Result;
             }
             , cancellationToken
             , TaskCreationOptions.AttachedToParent | TaskCreationOptions.LongRunning

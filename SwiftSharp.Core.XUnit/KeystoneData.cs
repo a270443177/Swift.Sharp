@@ -16,6 +16,11 @@
         internal KeystoneData()
         {
             //
+            // XUnit add tracers
+            System.Diagnostics.Debug.Listeners.Add(new System.Diagnostics.DefaultTraceListener());
+            System.Diagnostics.Trace.Listeners.Add(new System.Diagnostics.DefaultTraceListener());
+
+            //
             // Test that keystone server is exist and kicking
             HttpWebRequest request = WebRequest.Create(KeystoneData.keystoneServer) as HttpWebRequest;
             try

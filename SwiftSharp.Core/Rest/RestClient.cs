@@ -50,7 +50,19 @@ namespace SwiftSharp.Core.Rest
 
             HttpWebRequest request = WebRequest.Create(rawUri) as HttpWebRequest;
 
-            requestData.HeaderParams.AsParallel().ForAll((pair) => { request.Headers.Add(pair.Key, pair.Value); });
+            //
+            // 'Content-Length' must be modified by 'HttpRequest' object
+            if (requestData.HeaderParams.Keys.Any(p => p.Equals("Content-Length")))
+            {
+                //request.ContentLength = long.Parse(requestData.HeaderParams["Content-Length"]);
+                requestData.HeaderParams.Remove("Content-Length");
+            }
+
+
+            requestData.HeaderParams.AsParallel().ForAll((pair) => {
+                System.Diagnostics.Trace.WriteLine("[RestClient::Execute] Going to insert header: " + pair.Key + " with Value: " + pair.Value);
+                request.Headers.Add(pair.Key, pair.Value); 
+            });
 
             request.Method = requestData.Method;
 
@@ -58,7 +70,14 @@ namespace SwiftSharp.Core.Rest
             {
                 using (System.IO.StreamWriter writer =  new System.IO.StreamWriter(request.GetRequestStream()))
                 {
-                    writer.Write(requestData.Content);
+                    try
+                    {
+                        writer.Write(requestData.Content);
+                    }
+                    catch (System.Exception exp_egn2)
+                    {
+                        System.Diagnostics.Trace.WriteLine(exp_egn2.ToString());
+                    }
                 }
             }
 

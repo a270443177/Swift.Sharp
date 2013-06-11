@@ -169,7 +169,77 @@ namespace SwiftSharp.Core
                 return GetContainers(cancellationToken).Result;
             }
             , cancellationToken);
-
         }
+
+        /// <summary>
+        /// Gets the objects for container
+        /// </summary>
+        /// <param name="container">The container.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns><see cref="SwiftObjectsCollection"/> object</returns>
+        public Task<SwiftObjectsCollection> GetObjects(Container container, CancellationToken cancellationToken)
+        {
+            GenericDataProvider request = new GenericDataProvider(this.credentials, HttpMethod.Get);
+
+            request.Endpoint = container.Endpoint;
+
+            request.QueryParams.Add("format", "json");
+
+            RestClient<GenericDataProvider, SwiftObjectsCollectionParser> client = new RestClient<GenericDataProvider, SwiftObjectsCollectionParser>();
+
+            var tsk = client.Execute(request, cancellationToken);
+
+            return tsk.ContinueWith<SwiftObjectsCollection>(tskOk => {
+                return tskOk.Result.Data;
+            });
+        }
+
+        /// <summary>
+        /// Uploads the object/file to SWFIT server
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="container">The container.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>Awaitable task to wait for uploading to finish</returns>
+        public Task UploadObject(string fileName, Container container, CancellationToken cancellationToken)
+        {
+            GenericDataProvider request = new GenericDataProvider(this.credentials, HttpMethod.Put);
+
+            string objectUri = container.Endpoint.ToString() + "/" + Uri.EscapeDataString(FileUtils.NormalizeFileName(fileName));
+
+            request.Endpoint = new Uri(objectUri);
+
+            // request.QueryParams.Add("object", Uri.EscapeDataString(System.IO.Path.GetFileName(fileName)));
+
+            // request.HeaderParams.Add("object", System.IO.Path.GetFileName(fileName));
+
+            //request.HeaderParams.Add("ETag", FileUtils.GenerateMD5Hash(fileName));
+
+            //request.HeaderParams.Add("Content-Disposition", "attachment; filename=" + System.IO.Path.GetFileName(fileName));
+
+            //request.HeaderParams.Add("Content-Encoding", "BASE64");
+
+            // Does not need to insert 'Content-Length'
+            // request.HeaderParams.Add("Content-Length", new System.IO.FileInfo(fileName).Length.ToString());
+
+            request.Content = FileUtils.FileContent(fileName);
+
+            RestClient<GenericDataProvider, NullableParser> client = new RestClient<GenericDataProvider, NullableParser>();
+
+            return client.Execute(request, cancellationToken);
+        }
+    
+        //public Task<SwiftObject> DownloadObject(Container container, SwiftObject targetObject, CancellationToken cancellationToken)
+        //{
+        //    GenericDataProvider request = new GenericDataProvider(this.credentials, HttpMethod.Get);
+
+        //    request.QueryParams.Add("container", container.Name);
+        //    request.QueryParams.Add("object", targetObject.Name);
+
+        //    string objectUri = container.Endpoint.ToString() + "/" + Uri.UnescapeDataString  targetObject.Name;
+
+        //    request.Endpoint = container.Endpoint;
+
+        //}
     }
 }

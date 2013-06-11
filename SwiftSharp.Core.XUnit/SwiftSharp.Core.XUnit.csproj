@@ -59,6 +59,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Swift.AccountDetails.XUnit.cs" />
     <Compile Include="Swift.ContanerCollection.XUnit.cs" />
+    <Compile Include="Swift.Objects.XUnit.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -75,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="correct-session.txt" />
+    <EmbeddedResource Include="FixedFile.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

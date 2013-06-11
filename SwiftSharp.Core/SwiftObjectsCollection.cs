@@ -25,6 +25,15 @@ namespace SwiftSharp.Core
             : base()
         {
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SwiftObjectsCollection"/> class.
+        /// </summary>
+        /// <param name="coll">The coll.</param>
+        public SwiftObjectsCollection(IEnumerable<SwiftObject> coll)
+            : base(coll)
+        {
+        }
     }
 
     /// <summary>

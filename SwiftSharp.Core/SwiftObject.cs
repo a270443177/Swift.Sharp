@@ -7,6 +7,7 @@
 // -----------------------------------------------------------------------------
 namespace SwiftSharp.Core
 {
+    using System;
     using System.Runtime.Serialization;
 
     /// <summary>
@@ -95,6 +96,18 @@ namespace SwiftSharp.Core
         /// The name of the local file.
         /// </value>
         public string LocalFileName
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the endpoint.
+        /// </summary>
+        /// <value>
+        /// The endpoint.
+        /// </value>
+        public Uri Endpoint
         {
             get;
             set;

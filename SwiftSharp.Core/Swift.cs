@@ -9,6 +9,7 @@
 namespace SwiftSharp.Core
 {
     using System;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -190,7 +191,12 @@ namespace SwiftSharp.Core
             var tsk = client.Execute(request, cancellationToken);
 
             return tsk.ContinueWith<SwiftObjectsCollection>(tskOk => {
-                return tskOk.Result.Data;
+                
+                SwiftObjectsCollection coll = tskOk.Result.Data;
+
+                coll.ForEach(obj => obj.Endpoint = new Uri(container.Endpoint.ToString() + "/" + obj.Name));
+
+                return coll;
             });
         }
 
@@ -203,31 +209,26 @@ namespace SwiftSharp.Core
         /// <returns>Awaitable task to wait for uploading to finish</returns>
         public Task UploadObject(string fileName, Container container, CancellationToken cancellationToken)
         {
+            //request.QueryParams.Add("object", Uri.EscapeDataString(System.IO.Path.GetFileName(fileName)));
+            //request.HeaderParams.Add("object", System.IO.Path.GetFileName(fileName));
+            //request.HeaderParams.Add("ETag", FileUtils.GenerateMD5Hash(fileName));
+            //request.HeaderParams.Add("Content-Encoding", "BASE64");
+            //request.HeaderParams.Add("Content-Length", new System.IO.FileInfo(fileName).Length.ToString());
+
             GenericDataProvider request = new GenericDataProvider(this.credentials, HttpMethod.Put);
 
-            string objectUri = container.Endpoint.ToString() + "/" + Uri.EscapeDataString(FileUtils.NormalizeFileName(fileName));
+            request.Endpoint = new Uri(container.Endpoint + "/" + Uri.EscapeDataString(FileUtils.NormalizeFileName(fileName)));
 
-            request.Endpoint = new Uri(objectUri);
-
-            // request.QueryParams.Add("object", Uri.EscapeDataString(System.IO.Path.GetFileName(fileName)));
-
-            // request.HeaderParams.Add("object", System.IO.Path.GetFileName(fileName));
-
-            //request.HeaderParams.Add("ETag", FileUtils.GenerateMD5Hash(fileName));
-
-            //request.HeaderParams.Add("Content-Disposition", "attachment; filename=" + System.IO.Path.GetFileName(fileName));
-
-            //request.HeaderParams.Add("Content-Encoding", "BASE64");
-
-            // Does not need to insert 'Content-Length'
-            // request.HeaderParams.Add("Content-Length", new System.IO.FileInfo(fileName).Length.ToString());
+            //
+            // Real file name
+            request.HeaderParams.Add("Content-Disposition", "attachment; filename=" + System.IO.Path.GetFileName(fileName));
 
             request.Content = FileUtils.FileContent(fileName);
 
             RestClient<GenericDataProvider, NullableParser> client = new RestClient<GenericDataProvider, NullableParser>();
 
             return client.Execute(request, cancellationToken);
-        }
+        } 
     
         //public Task<SwiftObject> DownloadObject(Container container, SwiftObject targetObject, CancellationToken cancellationToken)
         //{
@@ -236,10 +237,44 @@ namespace SwiftSharp.Core
         //    request.QueryParams.Add("container", container.Name);
         //    request.QueryParams.Add("object", targetObject.Name);
 
-        //    string objectUri = container.Endpoint.ToString() + "/" + Uri.UnescapeDataString  targetObject.Name;
+        //    request.Endpoint = targetObject.Endpoint;
 
-        //    request.Endpoint = container.Endpoint;
 
         //}
+
+        /// <summary>
+        /// Deletes the object/file from SWIFT
+        /// </summary>
+        /// <param name="container">The container.</param>
+        /// <param name="targetObject">The target object.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>New collection of object for this container after deletion</returns>
+        public Task<SwiftObjectsCollection> DeleteObject(Container container, SwiftObject targetObject, CancellationToken cancellationToken)
+        {
+            GenericDataProvider request = new GenericDataProvider(this.credentials, HttpMethod.Delete);
+
+            if (targetObject.Endpoint != null)
+            {
+                request.Endpoint = targetObject.Endpoint;
+            }
+            else
+            {
+                request.Endpoint = new Uri(container.Endpoint.ToString() + "/" + Uri.EscapeDataString(FileUtils.NormalizeFileName(targetObject.Name)));
+            }
+
+            RestClient<GenericDataProvider, NullableParser> client = new RestClient<GenericDataProvider, NullableParser>();
+
+            var tsk = client.Execute(request, cancellationToken);
+
+            return tsk.ContinueWith<SwiftObjectsCollection>(tskOk => {
+
+                if (tsk.Status == TaskStatus.Faulted)
+                {
+                    throw tsk.Exception;
+                }
+
+                return GetObjects(container, cancellationToken).Result;
+            }); //,  cancellationToken, TaskContinuationOptions.NotOnFaulted, TaskScheduler.Current);
+        }
     }
 }

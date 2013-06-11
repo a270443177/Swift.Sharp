@@ -52,29 +52,135 @@ namespace SwiftSharp.Core.XUnit
             Assert.NotNull(swiftObjectCollection);
 
             System.Diagnostics.Trace.WriteLine("Container: " + targetContainer.Name + " has " + swiftObjectCollection.Count.ToString() + " objects inside it");
-            swiftObjectCollection.AsParallel().ForAll(obj => System.Diagnostics.Trace.WriteLine("Swift object name: " + obj.Name + " Hash: " + obj.MD5Hash + " length: " + obj.Length));
+            swiftObjectCollection.AsParallel().ForAll(obj => System.Diagnostics.Trace.WriteLine("Swift object name: " + obj.Name + " Hash: " + obj.MD5Hash + " length: " + obj.Length + " Endpoint: " + obj.Endpoint.ToString()));
         }
 
         [Theory(DisplayName = "[Objects] Correctly upload object")]
-        [PropertyData("RandomFile")]        //[PropertyData("FixedFileName")]
-        public void Upload_object(string fileName)
+        [PropertyData("RandomFileAtAllContainers")]        //[PropertyData("FixedFileName")]
+        public void Upload_object(string fileName, Container container)
         {
             swiftConnectionData = KeystoneData.GetKeystoneToken();
             tokenSource = new CancellationTokenSource();
 
             swiftclient = new Swift(swiftConnectionData.Item1, swiftConnectionData.Item2, KeystoneData.keystoneTenant);
 
-            Container container = null;
-
-            Assert.DoesNotThrow(() => {
-                container = GetFirstContainer.First()[0] as Container;
-            });
-
             System.Diagnostics.Trace.WriteLine("File: " + fileName + " gonna be uploaded to container: " + container.Name);
 
             Assert.DoesNotThrow(() => {
                 var tsk2 = swiftclient.UploadObject(fileName, container, tokenSource.Token);
                 tsk2.Wait();
+            });
+        }
+
+        [Fact(DisplayName = "[Objects] Delete all objects for all containers")]
+        public void Delete_all_objects_for_all_containers()
+        {
+            swiftConnectionData = KeystoneData.GetKeystoneToken();
+            tokenSource = new CancellationTokenSource();
+
+            swiftclient = new Swift(swiftConnectionData.Item1, swiftConnectionData.Item2, KeystoneData.keystoneTenant);
+
+            ContainerCollection containerCollection = null;
+
+            Assert.DoesNotThrow(() => {
+               var tsk = swiftclient.GetContainers(tokenSource.Token);
+               containerCollection = tsk.Result;
+            });
+
+            Assert.NotNull(containerCollection);
+
+            List<Tuple<Container, SwiftObjectsCollection>> listOfEverything = new List<Tuple<Container,SwiftObjectsCollection>>();
+
+            containerCollection.ForEach(container => {
+
+                Assert.DoesNotThrow(() => {
+                    var tsk2 = swiftclient.GetObjects(container, tokenSource.Token);
+                    listOfEverything.Add(new Tuple<Container, SwiftObjectsCollection>(container, tsk2.Result));
+                });
+            });
+
+            Assert.True(listOfEverything.Count > 0);
+
+            foreach (Tuple<Container, SwiftObjectsCollection> record in listOfEverything)
+            {
+                SwiftObjectsCollection originalCollection = record.Item2;
+                SwiftObjectsCollection generatedCollection = null;
+
+                originalCollection.ForEach(obj => {
+                    
+                    Assert.DoesNotThrow(()=>{
+
+                        System.Diagnostics.Trace.WriteLine("[Objects] Going to delete object: " + obj.Name + " from container: " + record.Item1.Name);
+
+                        var tsk3 = swiftclient.DeleteObject(record.Item1, obj, tokenSource.Token);
+                        generatedCollection = tsk3.Result;
+                    });
+
+                    Assert.NotNull(generatedCollection);
+
+                    Assert.False(originalCollection.Intersect(generatedCollection).Count() == originalCollection.Count);
+                });
+               
+            }
+        }
+
+        [Fact(DisplayName = "[Objects] Delete unknown object from container should throw")]
+        public void Delete_unknown_object_from_container_should_throw()
+        {
+            swiftConnectionData = KeystoneData.GetKeystoneToken();
+            tokenSource = new CancellationTokenSource();
+
+            swiftclient = new Swift(swiftConnectionData.Item1, swiftConnectionData.Item2, KeystoneData.keystoneTenant);
+
+            ContainerCollection containerCollection = null;
+
+            Assert.DoesNotThrow(() =>
+            {
+                var tsk = swiftclient.GetContainers(tokenSource.Token);
+                containerCollection = tsk.Result;
+            });
+
+            Assert.NotNull(containerCollection);
+
+
+            Container container = containerCollection.First();
+            SwiftObject badObject = new SwiftObject() { Name = "##I_am_super_bad##"};
+
+            Assert.Throws(typeof(AggregateException), () => {
+                var tsk =  swiftclient.DeleteObject(container, badObject, tokenSource.Token);
+                var coll = tsk.Result;
+                Assert.NotNull(coll);
+            });
+        }
+
+        [Fact(DisplayName = "[Objects] Delete unknown container should fail")]
+        public void Delete_unknown_container_should_fail()
+        {
+            swiftConnectionData = KeystoneData.GetKeystoneToken();
+            tokenSource = new CancellationTokenSource();
+
+            swiftclient = new Swift(swiftConnectionData.Item1, swiftConnectionData.Item2, KeystoneData.keystoneTenant);
+
+            ContainerCollection containersCollection = null;
+
+            Assert.DoesNotThrow(()=>{
+                var tsk = swiftclient.GetContainers(tokenSource.Token);
+                containersCollection = tsk.Result;
+            });
+
+            Assert.NotNull(containersCollection);
+            string validUri = containersCollection.First().Endpoint.ToString();
+            validUri = validUri.Substring(0, validUri.LastIndexOf("/"));
+
+            Container badContainer = new Container(){
+                Endpoint = new Uri(validUri + "/" + "##I_am_super_bad##")
+            };
+
+
+            Assert.Throws(typeof(AggregateException), () => {
+                var tsk = swiftclient.DeleteContainer(badContainer, tokenSource.Token);
+                var coll = tsk.Result;
+                Assert.Null(coll);
             });
         }
 
@@ -100,32 +206,64 @@ namespace SwiftSharp.Core.XUnit
                 }
             }
         }
-    
-        public static IEnumerable<object[]> RandomFile
+
+        public static IEnumerable<object[]> RandomFileAtAllContainers
         {
             get
             {
-                Random rnd = new Random(System.DateTime.Now.Millisecond);
+                Tuple<Uri, string> swiftConnectionData = KeystoneData.GetKeystoneToken();
+                CancellationTokenSource tokenSource = new CancellationTokenSource();
+
+                Swift swiftclient = new Swift(swiftConnectionData.Item1, swiftConnectionData.Item2, KeystoneData.keystoneTenant);
+
+                ContainerCollection containerCollection = null;
+
+                Assert.DoesNotThrow(() =>
+                {
+                    var tsk = swiftclient.GetContainers(tokenSource.Token);
+                    containerCollection = tsk.Result;
+                });
+
+                //
+                // Not empty
+                Assert.True(containerCollection.Any());
+
 
                 string randomFileName = Path.Combine(Environment.CurrentDirectory, Path.GetRandomFileName());
-                
-                byte [] fileRandomContent = new byte[rnd.Next(1, 20000)];
-                rnd.NextBytes(fileRandomContent);
 
-                using (FileStream fStream = File.Create(randomFileName))
+                FillFileContent(randomFileName);
+
+                string randomFileWithSpace = Path.GetRandomFileName();
+                randomFileWithSpace = randomFileWithSpace.Insert(2, " ");   //insert space
+                randomFileWithSpace = Path.Combine(Environment.CurrentDirectory, randomFileWithSpace);
+
+                FillFileContent(randomFileWithSpace);
+
+                List<string> fileNameColl = new List<string>();
+
+                fileNameColl.Add(randomFileName);
+                fileNameColl.Add(randomFileWithSpace);
+
+                return from container in containerCollection
+                       from fileName in fileNameColl
+                       select new object[] { fileName, container };
+            }
+        }
+
+        private static void FillFileContent(string fileName)
+        {
+            Random rnd = new Random(System.DateTime.Now.Millisecond);
+
+            byte[] fileRandomContent = new byte[rnd.Next(1, 20000)];
+            rnd.NextBytes(fileRandomContent);
+
+            using (FileStream fStream = File.Create(fileName))
+            {
+                using (BinaryWriter writer = new BinaryWriter(fStream))
                 {
-                    using (BinaryWriter writer = new BinaryWriter(fStream))
-                    {
-                        writer.Write(fileRandomContent);
-                        writer.Flush();
-                    }
+                    writer.Write(fileRandomContent);
+                    writer.Flush();
                 }
-
-                List<object[]> fileNames = new List<object[]>();
-
-                fileNames.Add(new object[] { randomFileName });
-
-                return fileNames;
             }
         }
 
